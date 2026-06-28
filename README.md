@@ -1,5 +1,5 @@
 # NeoNito-Discord-Bot
-a simple tempelate for a discord bot
+a simple tempelate for a discord bot (how to spell tempelate again? autocorrect ain't working I think tempelate is wrong)
 
 
 #### STILL IN WORK

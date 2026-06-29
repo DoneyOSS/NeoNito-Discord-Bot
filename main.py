@@ -8,6 +8,7 @@ from tinydb import TinyDB, Query
 from db import serverInfo
 import random
 import time
+from logsdb import logs
 
 # env
 load_dotenv()
@@ -16,12 +17,6 @@ token = os.getenv('DISCORD_TOKEN')
 # logs (Intents ain't important I summoned the entire gng)
 handler = logging.FileHandler(filename='log', encoding='utf-8', mode='w')
 intents = discord.Intents.all()
-
-# snipe
-
-# sniped
-
-
 #prefix
 def idkAtpNamesAreHard(bot, message):
     if not message.guild:
@@ -42,6 +37,65 @@ async def pr(ctx, prefix: str = "-"):
         await ctx.send(f"prefix got updated to {prefix}")
     else:
         await ctx.send(f"الاوامر الحين تشتغل في علامة {prefix}")
+
+
+# snipe
+@bot.event
+async def on_message_delete(message):
+    logs(message.guild.id, logs_text=message.content, user_text_log=str(message.author.id))
+@bot.hybrid_command(description="Snipe last deleted messages")
+async def snipe(ctx, back: int = 0):
+    if ctx.guild is None:
+        lang = "en"
+    else:
+        data = serverInfo(ctx.guild.id)
+        logss = logs(ctx.guild.id)
+        lang = data.get('lang', 'en')
+        prefix = data.get('prefix', '-')
+        killedMessages = logss.get('logs_text', [])
+        niggasWhoDeletedThemMessages = logss.get('user_text_log', [])
+
+    Back = -1 - back
+
+    try:
+        msgs = killedMessages[Back]
+        nickname = int(niggasWhoDeletedThemMessages[Back])
+    except IndexError:
+        if lang == "en":
+            return await ctx.send("there are not enough sniped messages")
+        else:
+            return await ctx.send("مافي رسايل ممسوحة كافية")
+
+    member = ctx.guild.get_member(nickname)
+    if member:
+        name = member.display_name
+        pfp = member.display_avatar.url
+    else:
+        pass
+
+    if not niggasWhoDeletedThemMessages:
+        if lang == "en":
+            embed = discord.Embed(
+                title="Nothing here to snipe tbh",
+                color=0x000032
+            )
+        else:
+            embed = discord.Embed(
+                title="ماكو شيء هنا عشان تشوفه",
+                color=0x000032
+            )
+    else:
+        embed = discord.Embed(
+            description=f"### {msgs}",
+            color=0x000032
+        )
+        embed.set_author(name=name, icon_url=pfp)
+
+    await ctx.send(embed=embed)
+# sniped
+
+
+
 
 @bot.hybrid_command(description="forgot prefix show it pls")
 async def forgot(ctx):

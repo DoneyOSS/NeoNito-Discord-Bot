@@ -1,0 +1,6 @@
+.env
+log
+*.json
+test.py
+*/
+logger.json

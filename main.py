@@ -178,6 +178,11 @@ async def help(ctx):
         value="",
         inline=False
     )
+    embed.add_field(
+        name="- **/Snipe**: Snipes last deleted message: snipe: /snipe <number: optional>",
+        value="",
+        inline=False
+    )
     await ctx.send(embed=embed)
 
 # lang
